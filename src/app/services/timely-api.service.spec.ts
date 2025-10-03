@@ -39,7 +39,7 @@ describe('Test TimelyApiService', () => {
   });
 
   afterEach(() => {
-     // garante que não há nenhuma requisição HTTP pendente ou inesperada.
+    // garante que não há nenhuma requisição HTTP pendente ou inesperada.
     httpMock.verify();
   });
 
@@ -48,47 +48,47 @@ describe('Test TimelyApiService', () => {
     expect(service).toBeTruthy();
   });
 
-      // TESTE 1: tudo funciona
-    it('should return an array of TimelyEvents on successful API calls', () => {
-      let actualEvents: TimelyEvent[] | undefined;
+  // TESTE 1: tudo funciona
+  it('should return an array of TimelyEvents on successful API calls', () => {
+    let actualEvents: TimelyEvent[] | undefined;
 
-      // 1. testando a função
-      service.fetchEvents().subscribe(events => {
-        actualEvents = events;
-      });
-
-      // 2. primeira chamada de API (para /info)
-      const infoReq = httpMock.expectOne(`${environment.apiUrl}info?url=${environment.calendarUrl}`);
-      expect(infoReq.request.method).toBe('GET');
-      infoReq.flush(mockCalendarInfo); // Fornecemos a resposta falsa
-
-      // 3. segunda chamada de API (para /events)
-      const eventsReq = httpMock.expectOne(`${environment.apiUrl}${mockCalendarInfo.data.id}/events`);
-      expect(eventsReq.request.method).toBe('GET');
-      eventsReq.flush(mockEventsResponse); // Fornecemos a resposta falsa
-
-      // 4. retorno esperado
-      expect(actualEvents).toEqual(mockEvents);
-      expect(actualEvents?.length).toBe(2);
-      expect(actualEvents?.[0].title).toBe('Event 1');
+    // 1. testando a função
+    service.fetchEvents().subscribe(events => {
+      actualEvents = events;
     });
 
-    // TESTE 2: erro api
-    it('should return a user-friendly error when the API call fails', () => {
-      const mockError = { status: 500, statusText: 'Internal Server Error' };
-      const expectedErrorMessage = 'Unable to load events. Please try again later.';
+    // 2. primeira chamada de API (para /info)
+    const infoReq = httpMock.expectOne(`${environment.apiUrl}info?url=${environment.calendarUrl}`);
+    expect(infoReq.request.method).toBe('GET');
+    infoReq.flush(mockCalendarInfo); // Fornecemos a resposta falsa
 
-      // 1. teste bloco 'error'
-      service.fetchEvents().subscribe({
-        next: () => fail('expected an error, but it succeeded'),
-        error: (err: Error) => {
-          // 3. handleError
-          expect(err.message).toBe(expectedErrorMessage);
-        }
-      });
+    // 3. segunda chamada de API (para /events)
+    const eventsReq = httpMock.expectOne(`${environment.apiUrl}${mockCalendarInfo.data.id}/events`);
+    expect(eventsReq.request.method).toBe('GET');
+    eventsReq.flush(mockEventsResponse); // Fornecemos a resposta falsa
 
-      // 2. API dando erro
-      const infoReq = httpMock.expectOne(`${environment.apiUrl}info?url=${environment.calendarUrl}`);
-      infoReq.flush(null, mockError);
+    // 4. retorno esperado
+    expect(actualEvents).toEqual(mockEvents);
+    expect(actualEvents?.length).toBe(2);
+    expect(actualEvents?.[0].title).toBe('Event 1');
+  });
+
+  // TESTE 2: erro api
+  it('should return a user-friendly error when the API call fails', () => {
+    const mockError = { status: 500, statusText: 'Internal Server Error' };
+    const expectedErrorMessage = 'Unable to load events. Please try again later.';
+
+    // 1. teste bloco 'error'
+    service.fetchEvents().subscribe({
+      next: () => fail('expected an error, but it succeeded'),
+      error: (err: Error) => {
+        // 3. handleError
+        expect(err.message).toBe(expectedErrorMessage);
+      }
     });
+
+    // 2. API dando erro
+    const infoReq = httpMock.expectOne(`${environment.apiUrl}info?url=${environment.calendarUrl}`);
+    infoReq.flush(null, mockError);
+  });
 });

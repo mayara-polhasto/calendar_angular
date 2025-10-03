@@ -2,7 +2,7 @@
 //definindo interfaces
 export interface ImageUrls {
   medium: string;
-  full?: string; 
+  full?: string;
   small?: string;
 }
 
@@ -20,5 +20,5 @@ export interface TimelyEvent {
 
   title?: string;
   description_short?: string;
-  image?: EventImage; 
+  image?: EventImage;
 }

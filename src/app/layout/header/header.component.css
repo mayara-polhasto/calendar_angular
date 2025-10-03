@@ -18,7 +18,7 @@
 .logo {
   font-size: 1.5rem;
   font-weight: 700;
-  color: #333;  
+  color: #333;
   display: flex;
   align-items: baseline;
   gap: 1.5rem;
@@ -34,16 +34,19 @@
 }
 
 .logo .material-icons {
-  font-size: 1.8rem; /* Um pouco maior que o texto para se destacar */
-  color: #4CAF50; /* Nossa cor de destaque verde para o ícone */
-  padding-bottom: 2px; /* Ajuste fino para alinhar melhor com o texto */
+  font-size: 1.8rem;
+  /* Um pouco maior que o texto para se destacar */
+  color: #4CAF50;
+  /* Nossa cor de destaque verde para o ícone */
+  padding-bottom: 2px;
+  /* Ajuste fino para alinhar melhor com o texto */
 }
 
 .current-date {
   font-size: 1rem;
-  font-weight: 800; 
+  font-weight: 800;
   color: #555;
-  padding-top: 2px; 
+  padding-top: 2px;
 }
 
 .spacer {

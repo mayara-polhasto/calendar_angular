@@ -8,7 +8,7 @@ import { of } from 'rxjs';
 
 //declarando servico mokado
 const mockApiService = {
-  fetchEvents: () => of([] as TimelyEvent[]) 
+  fetchEvents: () => of([] as TimelyEvent[])
 };
 
 //dados mokados
@@ -24,19 +24,19 @@ describe('CalendarComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ CalendarComponent ],
-      imports: [ HttpClientTestingModule ],
+      declarations: [CalendarComponent],
+      imports: [HttpClientTestingModule],
       providers: [
         { provide: TimelyApiService, useValue: mockApiService }
       ]
     })
-    .compileComponents();
+      .compileComponents();
   });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(CalendarComponent);
     component = fixture.componentInstance;
-    apiService = TestBed.inject(TimelyApiService); 
+    apiService = TestBed.inject(TimelyApiService);
     //fixture.detectChanges();
   });
 
@@ -46,13 +46,13 @@ describe('CalendarComponent', () => {
 
   // TESTE 2: chama o fetchEvents()
   it('should call fetchEvents on initialization', () => {
-  // 1. observar o método
+    // 1. observar o método
     const fetchSpy = spyOn(apiService, 'fetchEvents').and.callThrough();
 
-  // o que inclui a execução do ngOnInit()
+    // o que inclui a execução do ngOnInit()
     fixture.detectChanges();
 
-  // 3. foi chamado
+    // 3. foi chamado
     expect(fetchSpy).toHaveBeenCalled();
     expect(fetchSpy).toHaveBeenCalledTimes(1);
   });
