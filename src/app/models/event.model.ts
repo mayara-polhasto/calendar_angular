@@ -2,6 +2,8 @@
 //definindo interfaces
 export interface ImageUrls {
   medium: string;
+  full?: string; 
+  small?: string;
 }
 
 export interface EventImage {
@@ -14,9 +16,9 @@ export interface TimelyEvent {
   cost_display: string;
   featured: boolean;
   instance: string;
-  start_datetime: Date;
+  start_datetime: string;
 
   title?: string;
   description_short?: string;
-  image?: any; //tp não identificado
+  image?: EventImage; 
 }

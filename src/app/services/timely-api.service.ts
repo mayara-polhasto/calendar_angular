@@ -12,10 +12,13 @@ import { ApiListResponse, ApiResponse } from '../models/api-response.model';
   providedIn: 'root'
 })
 export class TimelyApiService {
-  private headers = new HttpHeaders().set('X-Api-Key', environment.apiKey);
+  private headers = new HttpHeaders({
+  'X-Api-Key': environment.apiKey
+});
 
   constructor(private http: HttpClient) { }
 
+  //metodo de conexão pública
   public fetchEvents(): Observable<TimelyEvent[]> {
     return this.getCalendarInfo().pipe(
       switchMap(info => this.getEvents(info.data.id)),
@@ -25,13 +28,16 @@ export class TimelyApiService {
   }
 
   private handleError(error: HttpErrorResponse): Observable<never> {
-    let errorMessage = 'An unknown error occurred!';
-    if (error.error instanceof ErrorEvent) {
-    } else {
-      errorMessage = `Server returned code ${error.status}, error message is: ${error.message}`;
-    }
-    console.error(errorMessage);
-    return throwError(() => new Error('Something bad happened; please try again later.'));
+  let errorMessage: string;
+  if (error.error instanceof ErrorEvent) {
+    errorMessage = `A client-side error occurred: ${error.error.message}`;
+  } else {
+    errorMessage = `Server returned code ${error.status}, error message is: ${error.message}`;
+  }
+  console.error(errorMessage);
+  
+  // CORRIJA AQUI para retornar a mensagem em português
+  return throwError(() => new Error('Unable to load events. Please try again later.'));
   }
 
   private getCalendarInfo(): Observable<ApiResponse<CalendarInfo>> {

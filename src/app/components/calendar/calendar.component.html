@@ -1,1 +1,44 @@
-<p>calendar works!</p>
+<div class="calendar-container">
+    <h1>Próximos Eventos</h1>
+
+    <div *ngIf="isLoading" class="feedback-message">
+        <p>Carregando eventos...</p>
+    </div>
+
+    <div *ngIf="error" class="feedback-message error">
+        <p>{{ error }}</p>
+    </div>
+
+    <div *ngIf="!isLoading && !error" class="events-grid">
+
+        <div class="event-card" *ngFor="let event of events">
+
+            <div class="card-image-container">
+
+                <div *ngIf="event.image; else placeholderImage">
+                    <img [src]="event.image.urls.medium" alt="Imagem para {{ event.title }}"
+                        (error)="updateImageOnError($event)">
+                </div>
+
+                <ng-template #placeholderImage>
+                    <img src="https://placehold.co/400x200/f5fff5/333?text=Evento+Sem+Imagem" alt="Evento sem imagem">
+                </ng-template>
+
+            </div>
+
+            <div class="card-content">
+                <h3 class="card-title">{{ event.title || 'Evento Sem Título' }}</h3>
+
+                <p class="card-date">
+                    <i class="material-icons">today</i>
+                    {{ event.start_datetime | date: 'dd/MM/yyyy • HH:mm' }}
+                </p>
+
+                <div class="card-description" [innerHTML]="event.description_short"></div>
+
+                <a href="#" class="card-button">Ver Detalhes</a>
+            </div>
+
+        </div>
+    </div>
+</div>
