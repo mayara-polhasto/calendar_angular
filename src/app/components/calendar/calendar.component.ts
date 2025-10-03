@@ -2,29 +2,32 @@ import { Component, OnInit } from '@angular/core';
 import { TimelyApiService } from '../../services/timely-api.service';
 import { TimelyEvent } from '../../models/event.model';
 import { HttpErrorResponse } from '@angular/common/http';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-root',
   templateUrl: './calendar.component.html',
-  styleUrls: ['./calendar.component.css']
+  styleUrls: ['./calendar.component.css'],
+  providers: [DatePipe]
 })
 export class CalendarComponent implements OnInit {
   public events: TimelyEvent[] = [];
   public isLoading: boolean = true;
   public error: string | null = null;
+  public currentDate = new Date();
 
-  constructor(private apiService: TimelyApiService) { }
+  constructor(private apiService: TimelyApiService, private datePipe: DatePipe) { }
 
   ngOnInit(): void {
-    console.log("Iniciando busca de dados da API...");
+    const today = new Date();
+    const formattedDate = this.datePipe.transform(today, 'yyyy-MM-dd') || undefined;
     this.isLoading = true;
     this.error = null;
 
-    this.apiService.fetchEvents().subscribe({
+    this.apiService.fetchEvents(formattedDate).subscribe({
       next: (eventsArray: TimelyEvent[]) => {
         this.events = eventsArray;
         this.isLoading = false;
-        console.log("Eventos recebidos com sucesso!", this.events);
       },
       error: (err: HttpErrorResponse) => {
         this.isLoading = false;
@@ -35,10 +38,10 @@ export class CalendarComponent implements OnInit {
   }
 
   public updateImageOnError(event: Event): void {
-    // Verificamos se o 'target' do evento existe
-    const element = event.target as HTMLImageElement;
-    if (element) {
-      element.src = 'https://placehold.co/400x200/f5fff5/333?text=Imagem+Indisponível';
-    }
+  const element = event.target as HTMLImageElement;
+  if (element) {
+    // Em vez de trocar a URL, nós simplesmente escondemos o elemento <img>
+    element.style.display = 'none';
   }
+}
 }

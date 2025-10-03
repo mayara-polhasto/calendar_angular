@@ -11,6 +11,26 @@ h1 {
     color: #333;
 }
 
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 2rem;
+}
+
+.page-header h1 {
+  margin: 0;
+  font-size: 2rem;
+  color: #333;
+}
+
+.page-header .current-date {
+  font-size: 1rem;
+  color: #555;
+  font-weight: 700;
+}
+
+
 /* A grade que vai organizar os cards */
 .events-grid {
     display: grid;
@@ -58,7 +78,7 @@ h1 {
     display: flex;
     align-items: center;
     color: #555;
-    font-size: 0.9rem;
+    font-size: 1rem;
     margin-bottom: 16px;
 }
 
@@ -96,4 +116,47 @@ h1 {
 
 .feedback-message.error {
     color: #dd0031;
+}
+
+.controls-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 32px;
+  flex-wrap: wrap; /* Para telas pequenas */
+  gap: 16px;
+}
+
+.search-box {
+  display: flex;
+  align-items: center;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  padding: 0 8px;
+  background-color: white;
+}
+
+.search-box i {
+  color: #888;
+}
+
+.search-box input {
+  border: none;
+  outline: none;
+  padding: 10px 8px;
+  font-size: 1rem;
+}
+
+.sort-box {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.sort-box select {
+  padding: 10px;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  font-size: 1rem;
+  background-color: white;
 }

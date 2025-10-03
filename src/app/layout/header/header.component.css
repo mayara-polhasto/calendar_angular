@@ -24,22 +24,10 @@
   gap: 1.5rem;
 }
 
-.dt-logo {
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: #333;
-  display: flex;
-  align-items: baseline;
-  margin-left: 2rem;
-}
-
 .logo .material-icons {
   font-size: 1.8rem;
-  /* Um pouco maior que o texto para se destacar */
   color: #4CAF50;
-  /* Nossa cor de destaque verde para o ícone */
   padding-bottom: 2px;
-  /* Ajuste fino para alinhar melhor com o texto */
 }
 
 .current-date {

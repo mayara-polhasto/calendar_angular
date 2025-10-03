@@ -19,9 +19,10 @@ export class TimelyApiService {
   constructor(private http: HttpClient) { }
 
   //metodo de conexão pública
-  public fetchEvents(): Observable<TimelyEvent[]> {
+  public fetchEvents(startDate?: string): Observable<TimelyEvent[]> {
     return this.getCalendarInfo().pipe(
-      switchMap(info => this.getEvents(info.data.id)),
+      // Passe o startDate para o getEvents
+      switchMap(info => this.getEvents(info.data.id, startDate)),
       map(response => response.data.items),
       catchError(this.handleError)
     );
@@ -46,8 +47,12 @@ export class TimelyApiService {
     return this.http.get<ApiResponse<CalendarInfo>>(url, { headers: this.headers, params });
   }
 
-  private getEvents(calendarId: string): Observable<ApiListResponse<TimelyEvent>> {
+  private getEvents(calendarId: string, startDate?: string): Observable<ApiListResponse<TimelyEvent>> {
     const url = `${environment.apiUrl}${calendarId}/events`;
-    return this.http.get<ApiListResponse<TimelyEvent>>(url, { headers: this.headers });
+    let params = new HttpParams();
+    if (startDate) {
+      params = params.set('start_date', startDate);
+    }
+    return this.http.get<ApiListResponse<TimelyEvent>>(url, { headers: this.headers, params });
   }
 }
