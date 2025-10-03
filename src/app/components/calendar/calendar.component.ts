@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { TimelyApiService } from '../../services/timely-api.service';
-import { TimelyEvent } from '../../models/event.model'; // Importe o modelo de evento
+import { TimelyEvent } from '../../models/event.model';
 import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
@@ -9,7 +9,6 @@ import { HttpErrorResponse } from '@angular/common/http';
   styleUrls: ['./calendar.component.css']
 })
 export class CalendarComponent implements OnInit {
-  // Vamos recriar as variáveis de estado que discutimos
   public events: TimelyEvent[] = [];
   public isLoading: boolean = true;
   public error: string | null = null;

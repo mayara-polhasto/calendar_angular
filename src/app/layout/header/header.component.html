@@ -1,0 +1,21 @@
+<header class="app-header">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+
+  <div class="header-content">
+    <div class="logo">
+        <i class="material-icons">calendar_today</i> <span>Timely Events</span> 
+    </div>
+     <div class="dt-logo">
+        <span class="current-date">{{ currentDate | date:'MMM yyyy' }}</span>      
+    </div>
+
+    <span class="spacer"></span>
+
+    <nav class="navigation">
+      <a href="#" class="nav-link">Home</a>
+      <a href="#" class="nav-link">About</a>
+      <a href="#" class="nav-link primary-button">Add Event</a>
+    </nav>
+  </div>
+</header>

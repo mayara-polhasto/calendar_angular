@@ -1,0 +1,81 @@
+.app-header {
+  width: 100%;
+  background-color: #ffffff;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+  padding: 0 24px;
+  box-sizing: border-box;
+}
+
+.header-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 64px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.logo {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #333;  
+  display: flex;
+  align-items: baseline;
+  gap: 1.5rem;
+}
+
+.dt-logo {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #333;
+  display: flex;
+  align-items: baseline;
+  margin-left: 2rem;
+}
+
+.logo .material-icons {
+  font-size: 1.8rem; /* Um pouco maior que o texto para se destacar */
+  color: #4CAF50; /* Nossa cor de destaque verde para o ícone */
+  padding-bottom: 2px; /* Ajuste fino para alinhar melhor com o texto */
+}
+
+.current-date {
+  font-size: 1rem;
+  font-weight: 800; 
+  color: #555;
+  padding-top: 2px; 
+}
+
+.spacer {
+  flex: 1;
+}
+
+.navigation {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.nav-link {
+  text-decoration: none;
+  color: #555;
+  font-weight: 400;
+  transition: color 0.2s ease-in-out;
+}
+
+.nav-link:hover {
+  color: #4CAF50;
+}
+
+.primary-button {
+  background-color: #4CAF50;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 6px;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.primary-button:hover {
+  background-color: #45a049;
+  color: white;
+}

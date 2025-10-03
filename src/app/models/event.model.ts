@@ -1,17 +1,15 @@
 
-// Interface para o objeto aninhado de URLs da imagem
+//definindo interfaces
 export interface ImageUrls {
   medium: string;
 }
 
-// Interface para o objeto de imagem
 export interface EventImage {
   urls: ImageUrls;
 }
 
-// A interface principal para cada evento
 export interface TimelyEvent {
-  // Propriedades que vimos na imagem
+  // Propriedades
   ticket_type: string;
   cost_display: string;
   featured: boolean;
