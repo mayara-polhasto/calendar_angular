@@ -5,6 +5,7 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { TimelyApiService } from '../../services/timely-api.service';
 import { TimelyEvent } from 'src/app/models/event.model';
 import { of } from 'rxjs';
+import { DebugElement } from '@angular/core';
 
 //declarando servico mokado
 const mockApiService = {
@@ -13,14 +14,15 @@ const mockApiService = {
 
 //dados mokados
 const MOCK_EVENTS: TimelyEvent[] = [
-  { title: 'Primeiro Evento', start_datetime: '2025-10-03T10:00:00', description_short: 'Desc 1', ticket_type: '', cost_display: '', featured: false, instance: '' },
-  { title: 'Segundo Evento', start_datetime: '2025-10-04T11:00:00', description_short: 'Desc 2', ticket_type: '', cost_display: '', featured: false, instance: '' },
+  { title: 'First event', start_datetime: '2025-10-03T10:00:00', description_short: 'Desc 1', ticket_type: '', cost_display: '', featured: false, instance: '' },
+  { title: 'Second event', start_datetime: '2025-10-04T11:00:00', description_short: 'Desc 2', ticket_type: '', cost_display: '', featured: false, instance: '' },
 ];
 
 describe('CalendarComponent', () => {
   let component: CalendarComponent;
   let fixture: ComponentFixture<CalendarComponent>;
   let apiService: TimelyApiService;
+  let el: DebugElement;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -37,7 +39,7 @@ describe('CalendarComponent', () => {
     fixture = TestBed.createComponent(CalendarComponent);
     component = fixture.componentInstance;
     apiService = TestBed.inject(TimelyApiService);
-    //fixture.detectChanges();
+    el = fixture.debugElement;
   });
 
   it('should create', () => {
@@ -49,10 +51,9 @@ describe('CalendarComponent', () => {
     // 1. observar o método
     const fetchSpy = spyOn(apiService, 'fetchEvents').and.callThrough();
 
-    // o que inclui a execução do ngOnInit()
     fixture.detectChanges();
 
-    // 3. foi chamado
+    //verificar se foi chamado
     expect(fetchSpy).toHaveBeenCalled();
     expect(fetchSpy).toHaveBeenCalledTimes(1);
   });
@@ -62,18 +63,24 @@ describe('CalendarComponent', () => {
     spyOn(apiService, 'fetchEvents').and.returnValue(of(MOCK_EVENTS));
     fixture.detectChanges();
     expect(component.allEvents.length).toBe(2);
-    expect(component.allEvents[0].title).toBe('Primeiro Evento');
+    expect(component.allEvents[0].title).toBe('First event');
   });
 
   //testando o template
   it('should render event titles', () => {
-    const fetchSpy = spyOn(apiService, 'fetchEvents').and.returnValue(of(MOCK_EVENTS));
+    // Mock do serviço com eventos
+    spyOn(apiService, 'fetchEvents').and.returnValue(of(MOCK_EVENTS));
 
-    fixture.detectChanges(); // dispara ngOnInit
+    // Dispara o ngOnInit e atualiza o DOM
+    fixture.detectChanges();
 
-    const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.textContent).toContain('Primeiro Evento');
-    expect(compiled.textContent).toContain('Segundo Evento');
+    // Seleciona os elementos do DOM
+    const titles = fixture.nativeElement.querySelectorAll('.card-title');
+
+    // Checa se os títulos estão corretos
+    expect(titles.length).toBe(2);
+    expect(titles[0].textContent).toContain('First event');
+    expect(titles[1].textContent).toContain('Second event');
   });
 
 });

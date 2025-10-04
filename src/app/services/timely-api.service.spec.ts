@@ -12,7 +12,7 @@ describe('Test TimelyApiService', () => {
   let service: TimelyApiService;
   let httpMock: HttpTestingController;
 
-  // dados mocados
+  // dados mokados
   const mockCalendarInfo: ApiResponse<CalendarInfo> = {
     data: { id: 'mock-calendar-id' }
   };
@@ -65,7 +65,7 @@ describe('Test TimelyApiService', () => {
     // 3. segunda chamada de API (para /events)
     const eventsReq = httpMock.expectOne(`${environment.apiUrl}${mockCalendarInfo.data.id}/events`);
     expect(eventsReq.request.method).toBe('GET');
-    eventsReq.flush(mockEventsResponse); // Fornecemos a resposta falsa
+    eventsReq.flush(mockEventsResponse);
 
     // 4. retorno esperado
     expect(actualEvents).toEqual(mockEvents);
