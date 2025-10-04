@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 import { TimelyApiService } from '../../services/timely-api.service';
 import { TimelyEvent } from '../../models/event.model';
 import { HttpErrorResponse } from '@angular/common/http';
 import { DatePipe } from '@angular/common';
+
 
 @Component({
   selector: 'app-root',
@@ -23,8 +24,10 @@ export class CalendarComponent implements OnInit {
   public sortOrder: 'asc' | 'desc' = 'asc';
   public selectedCategory: string = 'all';
   public categories: string[] = [];
-
   public selectedDate: Date | null = null;
+
+  //evento de compartilhamento
+  public openShareMenuId: string | null = null;
 
   public sortOptions = [
     { label: 'Date (Oldest First)', value: 'asc' },
@@ -109,6 +112,16 @@ export class CalendarComponent implements OnInit {
     } else {
       this.applyFiltersAndSort();
     }
+  }
+
+  public toggleShare(eventInstanceId: string, event: MouseEvent): void {
+    event.stopPropagation();
+    this.openShareMenuId = this.openShareMenuId === eventInstanceId ? null : eventInstanceId;
+  }
+
+  @HostListener('document:click')
+  onDocumentClick(): void {
+    this.openShareMenuId = null;
   }
 
   // Remove imagens quebradas

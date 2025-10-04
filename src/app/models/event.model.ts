@@ -21,4 +21,5 @@ export interface TimelyEvent {
   title?: string;
   description_short?: string;
   image?: EventImage;
+  showShare?: boolean;
 }
