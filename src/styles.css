@@ -1,20 +1,18 @@
 /* You can add global styles to this file, and also import other style files */
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap');
+@import url('https://fonts.googleapis.com/icon?family=Material+Icons');
 
-html {
+html, body {
   height: 100%;
+  margin: 0;
 }
 
 body {
-  margin: 0;
-  min-height: 100%;
+  /* USA A FONTE PADRÃO DO TEMA */
+  font-family: var(--font-family);
 
-  font-family: 'Roboto', sans-serif;
-  color: #333333;
+  /* USA A COR DE FUNDO PADRÃO DO TEMA (um cinza bem claro) */
+  background-color: var(--surface-ground);
 
-  background-image: linear-gradient(to bottom, #f5fff5, #ffffff);
-  background-repeat: no-repeat;
-
+  /* USA A COR DE TEXTO PADRÃO DO TEMA */
+  color: var(--text-color);
 }
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

@@ -25,6 +25,14 @@ export class CalendarComponent implements OnInit {
   public sortOrder: 'asc' | 'desc' = 'asc';
   public categories: string[] = [];
   public selectedCategory: string = 'all';
+  //opcoes do filtro
+  public sortOptions: any[] = [
+    { label: 'Date (Oldest First)', value: 'asc' },
+    { label: 'Date (Newest First)', value: 'desc' }
+  ];
+  public categoryOptions: any[] = [
+    { label: 'All', value: 'all' }
+  ];
 
 
   constructor(private apiService: TimelyApiService, private datePipe: DatePipe) { }
@@ -34,13 +42,21 @@ export class CalendarComponent implements OnInit {
     const formattedDate = this.datePipe.transform(today, 'yyyy-MM-dd') || undefined;
     this.isLoading = true;
     this.error = null;
+    this.sortOptions = [
+      { label: 'Date (Oldest First)', value: 'asc' },
+      { label: 'Date (Newest First)', value: 'desc' }
+    ];
+    this.categoryOptions = [{ label: 'All', value: 'all' }];
+    this.fetchAndDisplayEvents();
 
     this.apiService.fetchEvents(formattedDate).subscribe({
       next: (eventsArray: TimelyEvent[]) => {
         this.allEvents = eventsArray;
+        this.extractCategories();
         this.applyFiltersAndSort();
         this.isLoading = false;
       },
+
       error: (err: HttpErrorResponse) => {
         this.isLoading = false;
         this.error = err.message;
@@ -49,12 +65,12 @@ export class CalendarComponent implements OnInit {
     });
   }
 
-  public updateImageOnError(event: Event): void {
-    const element = event.target as HTMLImageElement;
-    if (element) {
-      // Em vez de trocar a URL, nós simplesmente escondemos o elemento <img>
-      element.style.display = 'none';
-    }
+  private extractCategories(): void {
+    const allTicketTypes = this.allEvents.map(event => event.ticket_type);
+    // categoria apareça apenas uma vez
+    this.categories = [...new Set(allTicketTypes)];
+    const newOptions = this.categories.map(cat => ({ label: cat, value: cat }));
+    this.categoryOptions = [{ label: 'All', value: 'all' }, ...newOptions];
   }
 
 
@@ -62,7 +78,11 @@ export class CalendarComponent implements OnInit {
   applyFiltersAndSort(): void {
     let events = [...this.allEvents];
 
-    // 2. Aplica o filtro de busca por texto (se houver texto)
+    if (this.selectedCategory && this.selectedCategory !== 'all') {
+      events = events.filter(event => event.ticket_type === this.selectedCategory);
+    }
+
+    // 2. filtro de busca por texto
     if (this.searchTerm && this.searchTerm.trim() !== '') {
       events = events.filter(event =>
         event.title?.toLowerCase().includes(this.searchTerm.toLowerCase())
@@ -78,5 +98,44 @@ export class CalendarComponent implements OnInit {
 
     // 4. Atualiza a lista
     this.filteredEvents = events;
+  }
+
+  public onDateChange(): void {
+    this.fetchAndDisplayEvents(this.selectedDate);
+  }
+
+  public clearDateFilter(): void {
+    this.selectedDate = null;
+    this.fetchAndDisplayEvents();
+  }
+
+  private fetchAndDisplayEvents(dateToFilter?: Date | null): void {
+    this.isLoading = true;
+    this.error = null;
+
+    const formattedDate = dateToFilter
+      ? this.datePipe.transform(dateToFilter, 'yyyy-MM-dd') || undefined
+      : undefined;
+
+    this.apiService.fetchEvents(formattedDate).subscribe({
+      next: (eventsArray: TimelyEvent[]) => {
+        this.allEvents = eventsArray;
+        this.extractCategories();
+        this.applyFiltersAndSort();
+        this.isLoading = false;
+      },
+      error: (err: HttpErrorResponse) => {
+        this.isLoading = false;
+        this.error = err.message;
+        console.error("Ocorreu um erro no componente:", err);
+      }
+    });
+  }
+
+  public updateImageOnError(event: Event): void {
+    const element = event.target as HTMLImageElement;
+    if (element) {
+      element.style.display = 'none';
+    }
   }
 }

@@ -58,15 +58,12 @@
   color: #4CAF50;
 }
 
-.primary-button {
-  background-color: #4CAF50;
-  color: white;
-  padding: 8px 16px;
-  border-radius: 6px;
-  transition: background-color 0.2s ease-in-out;
-}
-
-.primary-button:hover {
+.navigation .p-button:hover {
   background-color: #45a049;
   color: white;
+}
+
+.navigation .p-button {
+  /* Remove a decoração de texto (o sublinhado) */
+  text-decoration: none;
 }

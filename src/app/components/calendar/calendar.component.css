@@ -41,9 +41,10 @@ h1 {
 
 /* Estilo de cada card de evento */
 .event-card {
-  background-color: #ffffff;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  background-color: var(--surface-card);
+  border-radius: var(--border-radius);
+  border: 1px solid var(--surface-border);
+  box-shadow: var(--card-shadow);
   overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -161,36 +162,22 @@ h1 {
   background-color: white;
 }
 
-.controls-container {
+.category-filter {
   display: flex;
   align-items: center;
-  flex-wrap: wrap;
-  gap: 16px;
-  margin-bottom: 32px;
+  gap: 8px;
+}
+
+.category-filter select {
+  padding: 10px;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  font-size: 1rem;
+  background-color: white;
 }
 
 .date-picker {
-  padding-bottom: 1.34375em;
-}
-
-.clear-button {
-  background-color: #f1f1f1;
-  border: none;
-  border-radius: 50%;
-  width: 36px;
-  height: 36px;
   display: flex;
   align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  color: #555;
-  margin-left: -8px;
-}
-
-.clear-button:hover {
-  background-color: #e0e0e0;
-}
-
-.clear-button .material-icons {
-  font-size: 20px;
+  gap: 8px;
 }

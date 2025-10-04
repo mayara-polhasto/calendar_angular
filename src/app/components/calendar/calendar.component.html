@@ -1,6 +1,5 @@
 <div class="calendar-container">
     <div class="page-header">
-        <h1>Next Events</h1>
         <span class="current-date">{{ currentDate | date:'EEE, MMMM d' }}</span>
     </div>
 
@@ -13,20 +12,36 @@
     </div>
 
     <div class="controls-container">
-        <div class="search-box">
-            <i class="material-icons">search</i>
-            <input type="text" placeholder="Search by title..." [(ngModel)]="searchTerm"
-                (ngModelChange)="applyFiltersAndSort()">
+        <span class="p-input-icon-left">
+            <i class="pi pi-search"></i>
+            <input type="text" pInputText placeholder="Search by title..." [(ngModel)]="searchTerm"
+                (ngModelChange)="applyFiltersAndSort()" />
+        </span>
+
+
+        <div class="category-filter" *ngIf="categories.length > 0">
+            <label for="category">Category:</label>
+            <p-dropdown id="category" [options]="categoryOptions" [(ngModel)]="selectedCategory"
+                (onChange)="applyFiltersAndSort()">
+            </p-dropdown>
         </div>
+
+
 
         <div class="sort-box">
             <label for="sort">Sort by:</label>
-            <select id="sort" [(ngModel)]="sortOrder" (ngModelChange)="applyFiltersAndSort()">
-                <option value="asc">Date (Oldest First)</option>
-                <option value="desc">Date (Newest First)</option>
-            </select>
+            <p-dropdown id="sort" [options]="sortOptions" [(ngModel)]="sortOrder" (onChange)="applyFiltersAndSort()">
+            </p-dropdown>
+        </div>
+
+        <div class="date-picker">
+            <label for="dateFilter">Filter by date:</label>
+            <p-calendar id="dateFilter" [(ngModel)]="selectedDate" (onSelect)="onDateChange()" [showIcon]="true"
+                dateFormat="yy-mm-dd" placeholder="Select a date">
+            </p-calendar>
         </div>
     </div>
+
 
     <div *ngIf="!isLoading && !error" class="events-grid">
 
