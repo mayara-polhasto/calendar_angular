@@ -13,6 +13,7 @@ html, body {
 }
 
 body {
+  background: linear-gradient(180deg, #f4fdf6 0%, #ffffff 100%);
   /* USA A COR DE FUNDO PADRÃO DO TEMA */
   background-color: var(--surface-ground);
 
