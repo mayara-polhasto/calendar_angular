@@ -12,26 +12,33 @@ import { ApiListResponse, ApiResponse } from '../models/api-response.model';
   providedIn: 'root'
 })
 export class TimelyApiService {
-  private headers = new HttpHeaders().set('X-Api-Key', environment.apiKey);
+  private headers = new HttpHeaders({
+    'X-Api-Key': environment.apiKey
+  });
 
   constructor(private http: HttpClient) { }
 
-  public fetchEvents(): Observable<TimelyEvent[]> {
+  //metodo de conexão pública
+  public fetchEvents(startDate?: string, endDate?: string): Observable<TimelyEvent[]> {
     return this.getCalendarInfo().pipe(
-      switchMap(info => this.getEvents(info.data.id)),
+      // Passe o startDate para o getEvents
+      switchMap(info => this.getEvents(info.data.id, startDate, endDate)),
       map(response => response.data.items),
       catchError(this.handleError)
     );
   }
 
   private handleError(error: HttpErrorResponse): Observable<never> {
-    let errorMessage = 'An unknown error occurred!';
+    let errorMessage: string;
     if (error.error instanceof ErrorEvent) {
+      errorMessage = `A client-side error occurred: ${error.error.message}`;
     } else {
       errorMessage = `Server returned code ${error.status}, error message is: ${error.message}`;
     }
     console.error(errorMessage);
-    return throwError(() => new Error('Something bad happened; please try again later.'));
+
+    // CORRIJA AQUI para retornar a mensagem em português
+    return throwError(() => new Error('Unable to load events. Please try again later.'));
   }
 
   private getCalendarInfo(): Observable<ApiResponse<CalendarInfo>> {
@@ -40,8 +47,15 @@ export class TimelyApiService {
     return this.http.get<ApiResponse<CalendarInfo>>(url, { headers: this.headers, params });
   }
 
-  private getEvents(calendarId: string): Observable<ApiListResponse<TimelyEvent>> {
+  private getEvents(calendarId: string, startDate?: string, endDate?: string): Observable<ApiListResponse<TimelyEvent>> {
     const url = `${environment.apiUrl}${calendarId}/events`;
-    return this.http.get<ApiListResponse<TimelyEvent>>(url, { headers: this.headers });
+    let params = new HttpParams();
+
+    if (startDate) {
+      params = params.set('start_date', startDate);
+      params = params.set('end_date', endDate ?? startDate);
+    }
+
+    return this.http.get<ApiListResponse<TimelyEvent>>(url, { headers: this.headers, params });
   }
 }

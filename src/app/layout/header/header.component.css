@@ -1,0 +1,69 @@
+.app-header {
+  width: 100%;
+  background-color: #ffffff;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+  padding: 0 24px;
+  box-sizing: border-box;
+}
+
+.header-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 64px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.logo {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #333;
+  display: flex;
+  align-items: baseline;
+  gap: 1.5rem;
+}
+
+.logo .material-icons {
+  font-size: 1.8rem;
+  color: #4CAF50;
+  padding-bottom: 2px;
+}
+
+.current-date {
+  font-size: 1rem;
+  font-weight: 800;
+  color: #555;
+  padding-top: 2px;
+}
+
+.spacer {
+  flex: 1;
+}
+
+.navigation {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.nav-link {
+  text-decoration: none;
+  color: #555;
+  font-weight: 400;
+  transition: color 0.2s ease-in-out;
+}
+
+.nav-link:hover {
+  color: #4CAF50;
+}
+
+.navigation .p-button:hover {
+  background-color: #45a049;
+  color: white;
+}
+
+.navigation .p-button {
+  /* Remove a decoração de texto (o sublinhado) */
+  text-decoration: none;
+}
