@@ -64,7 +64,7 @@
                     (error)="updateImageOnError($event)">
             </div>
             <div class="card-content">
-                <h3 class="card-title">{{ event.title || 'Evento Sem Título' }}</h3>
+                <h3 class="card-title">{{ event.title || 'Untitled Event' }}</h3>
                 <p class="card-date">{{ event.start_datetime | date: 'dd/MM/yyyy • HH:mm' }}</p>
                 <div class="card-description" [innerHTML]="event.description_short"></div>
             </div>
