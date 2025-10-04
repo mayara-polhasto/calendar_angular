@@ -12,9 +12,25 @@
         <p>{{ error }}</p>
     </div>
 
+    <div class="controls-container">
+        <div class="search-box">
+            <i class="material-icons">search</i>
+            <input type="text" placeholder="Search by title..." [(ngModel)]="searchTerm"
+                (ngModelChange)="applyFiltersAndSort()">
+        </div>
+
+        <div class="sort-box">
+            <label for="sort">Sort by:</label>
+            <select id="sort" [(ngModel)]="sortOrder" (ngModelChange)="applyFiltersAndSort()">
+                <option value="asc">Date (Oldest First)</option>
+                <option value="desc">Date (Newest First)</option>
+            </select>
+        </div>
+    </div>
+
     <div *ngIf="!isLoading && !error" class="events-grid">
 
-        <div class="event-card" *ngFor="let event of events">
+        <div class="event-card" *ngFor="let event of filteredEvents">
 
             <div *ngIf="event.image" class="card-image-container">
                 <img [src]="event.image.urls.medium" alt="Imagem para {{ event.title }}"
