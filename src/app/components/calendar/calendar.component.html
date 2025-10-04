@@ -3,66 +3,76 @@
         <span class="current-date">{{ currentDate | date:'EEE, MMMM d' }}</span>
     </div>
 
-    <div *ngIf="isLoading" class="feedback-message">
-        <p>Carregando eventos...</p>
-    </div>
-
-    <div *ngIf="error" class="feedback-message error">
-        <p>{{ error }}</p>
-    </div>
-
+    <!-- Controles de filtro sempre visíveis -->
     <div class="controls-container">
+        <!-- Busca por título -->
         <span class="p-input-icon-left">
             <i class="pi pi-search"></i>
             <input type="text" pInputText placeholder="Search by title..." [(ngModel)]="searchTerm"
-                (ngModelChange)="applyFiltersAndSort()" />
+                (ngModelChange)="applyFiltersAndSort()" [disabled]="isLoading" />
         </span>
 
-
-        <div class="category-filter" *ngIf="categories.length > 0">
+        <!-- Filtro de categoria -->
+        <div class="category-filter">
             <label for="category">Category:</label>
             <p-dropdown id="category" [options]="categoryOptions" [(ngModel)]="selectedCategory"
-                (onChange)="applyFiltersAndSort()">
+                (onChange)="applyFiltersAndSort()" [disabled]="isLoading || categoryOptions.length <= 1">
             </p-dropdown>
         </div>
 
-
-
+        <!-- Ordenação -->
         <div class="sort-box">
             <label for="sort">Sort by:</label>
-            <p-dropdown id="sort" [options]="sortOptions" [(ngModel)]="sortOrder" (onChange)="applyFiltersAndSort()">
+            <p-dropdown id="sort" [options]="sortOptions" [(ngModel)]="sortOrder" (onChange)="applyFiltersAndSort()"
+                [disabled]="isLoading">
             </p-dropdown>
         </div>
 
+        <!-- Filtro por data -->
         <div class="date-picker">
             <label for="dateFilter">Filter by date:</label>
-            <p-calendar id="dateFilter" [(ngModel)]="selectedDate" (onSelect)="onDateChange()" [showIcon]="true"
-                dateFormat="yy-mm-dd" placeholder="Select a date">
+            <p-calendar [(ngModel)]="selectedDate" (onSelect)="onDateChange()" (onBlur)="onDateChange()"
+                [showIcon]="true" dateFormat="yy-mm-dd" placeholder="Select a date">
             </p-calendar>
         </div>
     </div>
 
+    <!-- Skeleton enquanto carrega -->
+    <div *ngIf="isLoading" class="events-grid">
+        <div class="event-card" *ngFor="let i of skeletons">
+            <div class="card-image-container">
+                <p-skeleton width="100%" height="150px"></p-skeleton>
+            </div>
+            <div class="card-content">
+                <h3 class="card-title"><p-skeleton width="80%"></p-skeleton></h3>
+                <p class="card-date"><p-skeleton width="60%"></p-skeleton></p>
+                <div class="card-description"><p-skeleton width="90%" count="3"></p-skeleton></div>
+            </div>
+        </div>
+    </div>
 
-    <div *ngIf="!isLoading && !error" class="events-grid">
+    <!-- Mensagem de erro -->
+    <div *ngIf="error" class="feedback-message error">
+        <p>{{ error }}</p>
+    </div>
 
+    <!-- Eventos carregados -->
+    <div *ngIf="!isLoading && !error && filteredEvents.length > 0" class="events-grid">
         <div class="event-card" *ngFor="let event of filteredEvents">
-
             <div *ngIf="event.image" class="card-image-container">
                 <img [src]="event.image.urls.medium" alt="Imagem para {{ event.title }}"
                     (error)="updateImageOnError($event)">
             </div>
-
             <div class="card-content">
                 <h3 class="card-title">{{ event.title || 'Evento Sem Título' }}</h3>
-
-                <p class="card-date">
-                    <i class="material-icons">today</i>
-                    {{ event.start_datetime | date: 'dd/MM/yyyy • HH:mm' }}
-                </p>
-
+                <p class="card-date">{{ event.start_datetime | date: 'dd/MM/yyyy • HH:mm' }}</p>
                 <div class="card-description" [innerHTML]="event.description_short"></div>
             </div>
-
         </div>
+    </div>
+
+    <!-- Mensagem quando não há eventos -->
+    <div *ngIf="!isLoading && !error && filteredEvents.length === 0" class="feedback-message">
+        <p>No events found for this date.</p>
     </div>
 </div>

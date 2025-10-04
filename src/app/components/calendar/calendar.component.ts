@@ -11,131 +11,109 @@ import { DatePipe } from '@angular/common';
   providers: [DatePipe]
 })
 export class CalendarComponent implements OnInit {
-  public events: TimelyEvent[] = [];
+  public currentDate = new Date();
+  public skeletons = Array(6); // skeleton cards
   public isLoading: boolean = true;
   public error: string | null = null;
-  public currentDate = new Date();
-  public selectedDate: Date | null = new Date();
 
-  //eventos
-  private allEvents: TimelyEvent[] = [];
+  public allEvents: TimelyEvent[] = [];
   public filteredEvents: TimelyEvent[] = [];
-  //filtros
+
   public searchTerm: string = '';
   public sortOrder: 'asc' | 'desc' = 'asc';
-  public categories: string[] = [];
   public selectedCategory: string = 'all';
-  //opcoes do filtro
-  public sortOptions: any[] = [
+  public categories: string[] = [];
+
+  public selectedDate: Date | null = null;
+
+  public sortOptions = [
     { label: 'Date (Oldest First)', value: 'asc' },
     { label: 'Date (Newest First)', value: 'desc' }
   ];
-  public categoryOptions: any[] = [
-    { label: 'All', value: 'all' }
-  ];
 
+  public categoryOptions: any[] = [{ label: 'All', value: 'all' }];
 
   constructor(private apiService: TimelyApiService, private datePipe: DatePipe) { }
 
   ngOnInit(): void {
-    const today = new Date();
-    const formattedDate = this.datePipe.transform(today, 'yyyy-MM-dd') || undefined;
+    this.fetchAndDisplayEvents();
+  }
+
+  // Busca todos os eventos da API
+  private fetchAndDisplayEvents(): void {
     this.isLoading = true;
     this.error = null;
-    this.sortOptions = [
-      { label: 'Date (Oldest First)', value: 'asc' },
-      { label: 'Date (Newest First)', value: 'desc' }
-    ];
-    this.categoryOptions = [{ label: 'All', value: 'all' }];
-    this.fetchAndDisplayEvents();
 
-    this.apiService.fetchEvents(formattedDate).subscribe({
-      next: (eventsArray: TimelyEvent[]) => {
-        this.allEvents = eventsArray;
+    this.apiService.fetchEvents().subscribe({
+      next: (events: TimelyEvent[]) => {
+        this.allEvents = events;
         this.extractCategories();
         this.applyFiltersAndSort();
         this.isLoading = false;
       },
-
       error: (err: HttpErrorResponse) => {
         this.isLoading = false;
-        this.error = err.message;
-        console.error("Ocorreu um erro no componente:", err);
+        this.error = 'Unable to load events. Please try again later.';
+        console.error(err);
       }
     });
   }
 
+  // Extrai categorias únicas para o dropdown
   private extractCategories(): void {
-    const allTicketTypes = this.allEvents.map(event => event.ticket_type);
-    // categoria apareça apenas uma vez
+    const allTicketTypes = this.allEvents.map(e => e.ticket_type);
     this.categories = [...new Set(allTicketTypes)];
     const newOptions = this.categories.map(cat => ({ label: cat, value: cat }));
     this.categoryOptions = [{ label: 'All', value: 'all' }, ...newOptions];
   }
 
-
-  //filtro de texto e a ordenação   
-  applyFiltersAndSort(): void {
+  // Aplica filtros de data, categoria, busca e ordenação
+  public applyFiltersAndSort(): void {
     let events = [...this.allEvents];
 
+    // filtro por categoria
     if (this.selectedCategory && this.selectedCategory !== 'all') {
-      events = events.filter(event => event.ticket_type === this.selectedCategory);
+      events = events.filter(e => e.ticket_type === this.selectedCategory);
     }
 
-    // 2. filtro de busca por texto
+    // filtro por texto
     if (this.searchTerm && this.searchTerm.trim() !== '') {
-      events = events.filter(event =>
-        event.title?.toLowerCase().includes(this.searchTerm.toLowerCase())
+      events = events.filter(e =>
+        e.title?.toLowerCase().includes(this.searchTerm.toLowerCase())
       );
     }
 
-    // 3. ordenação por data
+    // filtro por data
+    if (this.selectedDate) {
+      const target = this.selectedDate.getFullYear() + '-' +
+        String(this.selectedDate.getMonth() + 1).padStart(2, '0') + '-' +
+        String(this.selectedDate.getDate()).padStart(2, '0');
+      events = events.filter(e => e.start_datetime.substring(0, 10) === target);
+    }
+
+    // ordenação por data
     events.sort((a, b) => {
       const dateA = new Date(a.start_datetime).getTime();
       const dateB = new Date(b.start_datetime).getTime();
       return this.sortOrder === 'asc' ? dateA - dateB : dateB - dateA;
     });
 
-    // 4. Atualiza a lista
     this.filteredEvents = events;
   }
 
+  // Trigger ao mudar a data
   public onDateChange(): void {
-    this.fetchAndDisplayEvents(this.selectedDate);
+    if (!this.selectedDate) {
+      // Quando não há data selecionada, retorna todos os eventos
+      this.filteredEvents = [...this.allEvents];
+    } else {
+      this.applyFiltersAndSort();
+    }
   }
 
-  public clearDateFilter(): void {
-    this.selectedDate = null;
-    this.fetchAndDisplayEvents();
-  }
-
-  private fetchAndDisplayEvents(dateToFilter?: Date | null): void {
-    this.isLoading = true;
-    this.error = null;
-
-    const formattedDate = dateToFilter
-      ? this.datePipe.transform(dateToFilter, 'yyyy-MM-dd') || undefined
-      : undefined;
-
-    this.apiService.fetchEvents(formattedDate).subscribe({
-      next: (eventsArray: TimelyEvent[]) => {
-        this.allEvents = eventsArray;
-        this.extractCategories();
-        this.applyFiltersAndSort();
-        this.isLoading = false;
-      },
-      error: (err: HttpErrorResponse) => {
-        this.isLoading = false;
-        this.error = err.message;
-        console.error("Ocorreu um erro no componente:", err);
-      }
-    });
-  }
-
+  // Remove imagens quebradas
   public updateImageOnError(event: Event): void {
     const element = event.target as HTMLImageElement;
-    if (element) {
-      element.style.display = 'none';
-    }
+    if (element) element.style.display = 'none';
   }
 }

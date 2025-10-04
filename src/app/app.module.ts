@@ -19,6 +19,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { DropdownModule } from 'primeng/dropdown';
 import { CalendarModule } from 'primeng/calendar';
 import { ButtonModule } from 'primeng/button';
+import { SkeletonModule } from 'primeng/skeleton';
 
 @NgModule({
   declarations: [
@@ -41,7 +42,8 @@ import { ButtonModule } from 'primeng/button';
     InputTextModule,
     DropdownModule,
     CalendarModule,
-    ButtonModule
+    ButtonModule,
+    SkeletonModule
   ],
   providers: [],
   bootstrap: [AppComponent],
