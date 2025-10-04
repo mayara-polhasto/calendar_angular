@@ -91,4 +91,39 @@ describe('Test TimelyApiService', () => {
     const infoReq = httpMock.expectOne(`${environment.apiUrl}info?url=${environment.calendarUrl}`);
     infoReq.flush(null, mockError);
   });
+
+  // TESTE 3: sem eventos
+  it('should return an empty array when no events are available', () => {
+    service.fetchEvents().subscribe(events => {
+      expect(events.length).toBe(0);
+    });
+
+    const infoReq = httpMock.expectOne(`${environment.apiUrl}info?url=${environment.calendarUrl}`);
+    infoReq.flush(mockCalendarInfo);
+
+    const eventsReq = httpMock.expectOne(`${environment.apiUrl}${mockCalendarInfo.data.id}/events`);
+    eventsReq.flush({ data: { items: [] } });
+  });
+
+  // TESTE 4: erro na segunda chamada da API (/events)
+  it('should return a user-friendly error when the events API call fails', () => {
+    const mockError = { status: 500, statusText: 'Internal Server Error' };
+    const expectedErrorMessage = 'Unable to load events. Please try again later.';
+
+    service.fetchEvents().subscribe({
+      next: () => fail('expected an error, but it succeeded'),
+      error: (err: Error) => {
+        expect(err.message).toBe(expectedErrorMessage);
+      }
+    });
+
+    // /info retorna sucesso
+    const infoReq = httpMock.expectOne(`${environment.apiUrl}info?url=${environment.calendarUrl}`);
+    infoReq.flush(mockCalendarInfo);
+
+    // /events retorna erro
+    const eventsReq = httpMock.expectOne(`${environment.apiUrl}${mockCalendarInfo.data.id}/events`);
+    eventsReq.flush(null, mockError);
+  });
+
 });

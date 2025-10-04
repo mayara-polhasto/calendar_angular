@@ -57,4 +57,23 @@ describe('CalendarComponent', () => {
     expect(fetchSpy).toHaveBeenCalledTimes(1);
   });
 
+  //testando a manipulação dos eventos
+  it('should populate events from the API', () => {
+    spyOn(apiService, 'fetchEvents').and.returnValue(of(MOCK_EVENTS));
+    fixture.detectChanges();
+    expect(component.allEvents.length).toBe(2);
+    expect(component.allEvents[0].title).toBe('Primeiro Evento');
+  });
+
+  //testando o template
+  it('should render event titles', () => {
+    const fetchSpy = spyOn(apiService, 'fetchEvents').and.returnValue(of(MOCK_EVENTS));
+
+    fixture.detectChanges(); // dispara ngOnInit
+
+    const compiled = fixture.nativeElement as HTMLElement;
+    expect(compiled.textContent).toContain('Primeiro Evento');
+    expect(compiled.textContent).toContain('Segundo Evento');
+  });
+
 });
