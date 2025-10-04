@@ -12,7 +12,7 @@ import { DatePipe } from '@angular/common';
 })
 export class CalendarComponent implements OnInit {
   public currentDate = new Date();
-  public skeletons = Array(6); // skeleton cards
+  public skeletons = Array(10); // skeleton cards
   public isLoading: boolean = true;
   public error: string | null = null;
 

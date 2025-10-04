@@ -48,12 +48,16 @@ h1 {
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  transition: opacity 0.3s ease-in-out;
 }
 
 .event-card:hover {
   transform: translateY(-5px);
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
+}
+
+.event-card.loading {
+    opacity: 0.6;
 }
 
 .card-image-container img {
