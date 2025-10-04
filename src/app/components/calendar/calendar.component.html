@@ -89,6 +89,21 @@
 
     <!-- Mensagem quando não há eventos -->
     <div *ngIf="!isLoading && !error && filteredEvents.length === 0" class="feedback-message">
-        <p>No events found for this date.</p>
+
+        <p *ngIf="searchTerm.trim() !== ''">
+            No events found with a similar description.
+        </p>
+
+        <p *ngIf="searchTerm.trim() === '' && selectedDate">
+            No events found for this date.
+        </p>
+
+        <p *ngIf="searchTerm.trim() === '' && !selectedDate">
+            There are no upcoming events at the moment.
+        </p>
+
+    </div>
+
+    <div *ngIf="!isLoading && !error && filteredEvents.length > 0" class="events-grid">
     </div>
 </div>
